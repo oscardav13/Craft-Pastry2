@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<!-- Tienda generada con Harvys, asistente de e-commerce creado por el Profesor Harvey Sanabria -->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Craft Pastry — Un antojo para cada momento.</title>
+<meta name="description" content="Panes, hojaldres y antojos dulces.">
+<meta name="generator" content="Harvys — asistente de e-commerce del Profesor Harvey Sanabria">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="anim-media tarj-elevadas modo-claro">
+
+<!-- MODAL PAGO -->
+<div class="modal-overlay" id="modal-pago" onclick="modalClickFuera(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3>Confirmar pago</h3><button class="modal-cerrar" onclick="cerrarModal()" aria-label="Cerrar">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-total"><span class="tl">Total a pagar</span><span class="tm" id="modal-total-monto">$0</span></div>
+      <div class="pago-metodos" id="pago-metodos"></div>
+      <div class="pago-datos" id="pago-datos">
+        <div class="pd-label">Transferir a este número</div>
+        <div class="pd-numero" id="pd-numero"></div>
+        <div class="pd-nombre" id="pd-nombre"></div>
+        <button class="btn-copiar" onclick="copiarNumero()">📋 Copiar número</button>
+      </div>
+      <div class="pasos">
+        <div class="paso"><div class="paso-num">1</div><div class="paso-txt" id="paso-1"></div></div>
+        <div class="paso"><div class="paso-num">2</div><div class="paso-txt">Toca <strong>"Confirmar y enviar"</strong> — se abre WhatsApp con tu pedido</div></div>
+        <div class="paso"><div class="paso-num">3</div><div class="paso-txt" id="paso-3"></div></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <a href="#" target="_blank" rel="noopener" class="btn-wsp" onclick="return prepararWsp(this)">✅ Confirmar y enviar por WhatsApp</a>
+      <button class="btn-seguir" onclick="cerrarModal()">← Seguir comprando</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="cerrarCarrito()"></div>
+
+<!-- VISOR DE FOTOS -->
+<div class="visor" id="visor" role="dialog" aria-modal="true" aria-label="Foto del producto">
+  <figure class="visor-caja">
+    <button class="visor-cerrar" aria-label="Cerrar">✕</button>
+    <div class="visor-foto" id="visor-foto"><img id="visor-img" alt=""></div>
+    <figcaption><strong id="visor-nombre"></strong><span id="visor-precio"></span></figcaption>
+    <div class="visor-ayuda">Toca o haz clic en la foto para ampliarla más</div>
+  </figure>
+</div>
+
+<button class="carrito-fab" onclick="toggleCarrito()" id="fab" aria-label="Abrir carrito">🛒<span class="carrito-badge" id="badge">0</span></button>
+
+<div class="carrito-panel" id="panel-carrito">
+  <div class="panel-header"><h3>Tus antojos</h3><button class="btn-cerrar" onclick="cerrarCarrito()" aria-label="Cerrar carrito">✕</button></div>
+  <ul id="lista-carrito"></ul>
+  <div class="panel-footer">
+    <div class="total-row"><span class="total-lbl">Total</span><span class="total-monto" id="total">$0</span></div>
+    <div class="panel-btns"><button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar</button><button class="btn-pagar" onclick="pagar()">Pedir por WhatsApp</button></div>
+  </div>
+</div>
+
+<!-- ASISTENTE DE LA TIENDA (responde con los datos de esta tienda) -->
+<span class="as-aviso" id="as-aviso">¿Te ayudo? 👋</span>
+<button class="as-burbuja" id="as-burbuja" aria-label="Abrir el asistente de la tienda"><svg class="as-robot" viewBox="0 0 64 64" aria-hidden="true">
+      <line x1="32" y1="5" x2="32" y2="14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <circle class="as-antena" cx="32" cy="5" r="4" fill="currentColor"/>
+      <rect x="4" y="27" width="6" height="12" rx="3" fill="currentColor"/>
+      <rect x="54" y="27" width="6" height="12" rx="3" fill="currentColor"/>
+      <rect x="10" y="14" width="44" height="38" rx="15" fill="currentColor"/>
+      <rect x="16" y="21" width="32" height="20" rx="10" fill="var(--as-cara)"/>
+      <circle class="as-ojo" cx="25" cy="31" r="4" fill="currentColor"/>
+      <circle class="as-ojo" cx="39" cy="31" r="4" fill="currentColor"/>
+      <path d="M26 45q6 4 12 0" stroke="var(--as-cara)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg></button>
+<div class="as-panel" id="as-panel" role="dialog" aria-label="Miga">
+  <div class="as-cabecera">
+    <div class="as-avatar"><svg class="as-robot" viewBox="0 0 64 64" aria-hidden="true">
+      <line x1="32" y1="5" x2="32" y2="14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <circle class="as-antena" cx="32" cy="5" r="4" fill="currentColor"/>
+      <rect x="4" y="27" width="6" height="12" rx="3" fill="currentColor"/>
+      <rect x="54" y="27" width="6" height="12" rx="3" fill="currentColor"/>
+      <rect x="10" y="14" width="44" height="38" rx="15" fill="currentColor"/>
+      <rect x="16" y="21" width="32" height="20" rx="10" fill="var(--as-cara)"/>
+      <circle class="as-ojo" cx="25" cy="31" r="4" fill="currentColor"/>
+      <circle class="as-ojo" cx="39" cy="31" r="4" fill="currentColor"/>
+      <path d="M26 45q6 4 12 0" stroke="var(--as-cara)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg></div>
+    <div><strong>Miga</strong><small><i></i> En línea</small></div>
+    <button id="as-cerrar" aria-label="Cerrar el asistente">✕</button>
+  </div>
+  <div class="as-mensajes" id="as-mensajes"></div>
+  <div class="as-chips" id="as-chips"></div>
+  <form class="as-form" id="as-form">
+    <input id="as-input" placeholder="Escribe tu pregunta…" autocomplete="off" aria-label="Tu pregunta">
+    <button type="submit" aria-label="Enviar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button>
+  </form>
+</div>
+
+<header class="hero hero-dividido">
+  <div class="hero-bg efecto-ninguno"></div>
+  <div class="hero-content">
+    <div>
+      
+      <div class="hero-badge">Panes · Hojaldres · Antojos dulces</div>
+      <h1>Craft Pastry</h1>
+      <p class="hero-sub">Panes, hojaldres y pequeños antojos para disfrutar tu momento.</p>
+      <a href="#catalogo" class="btn-hero">Descubre nuestros antojos
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <div class="hero-stats"><div class="hero-stat"><div class="num">6</div><div class="lbl">Antojos para elegir</div></div><div class="hero-stat"><div class="num">Bogotá</div><div class="lbl">Engativá</div></div><div class="hero-stat"><div class="num">Dulce y salado</div><div class="lbl">Para tu antojo</div></div></div>
+    </div>
+    <img src="img/croissant-zwl7v3.jpg" alt="" class="hero-img"></div>
+  <div class="hero-scroll"><div></div></div>
+</header>
+
+<section class="banner-sec">
+  <div class="banner-glow"></div>
+  <div class="banner-content">
+    <div class="sec-label">Date un gusto</div>
+    <h2>Tu próximo <em>antojo favorito</em></h2>
+    <p>Explora nuestros panes, hojaldres y antojos dulces. Encuéntranos en Cl. 72 #96A-2, Engativá, Bogotá.</p>
+    <div class="banner-chips"><span class="chip">Panes</span><span class="chip">Hojaldres</span><span class="chip">Antojos dulces</span><span class="chip">Engativá, Bogotá</span></div>
+  </div>
+</section>
+
+<div class="filtros-wrap" id="filtros-bar">
+  <div class="busqueda-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
+    <input type="text" id="buscador" placeholder="Buscar producto..." oninput="filtrarBusqueda()">
+  </div>
+</div>
+<section class="catalogo-wrap" id="catalogo">
+  <div class="catalogo-header">
+    <div><div class="sec-label">Nuestra selección</div><div class="sec-title">¿Qué se te antoja hoy?</div></div>
+    <div class="catalogo-count" id="cont-count"></div>
+  </div>
+  <div id="productos"></div>
+</section>
+
+<section class="beneficios-sec" id="beneficios">
+  <div class="sec-centro"><div class="sec-label">Conoce Craft Pastry</div><div class="sec-title">Un lugar para tus antojos</div></div>
+  <div class="beneficios-grid">
+    <div class="bcard"><div class="bcard-icono">🥖</div><h3>Panes para elegir</h3><p>Descubre el pan integral de nuestro catálogo.</p></div><div class="bcard"><div class="bcard-icono">🥐</div><h3>Antojos dulces y salados</h3><p>Elige entre galleta, alfajor, brownie, croissant y palito de queso.</p></div><div class="bcard"><div class="bcard-icono">📍</div><h3>En Engativá</h3><p>Encuéntranos en Cl. 72 #96A-2, Bogotá.</p></div>
+  </div>
+</section>
+
+<section class="recs-sec">
+  <div class="sec-label">Ideas para darte un gusto</div>
+  <div class="sec-title">Antojos para descubrir</div>
+  <div class="recs-grid" id="recomendados"></div>
+</section>
+
+<section class="top-sec">
+  <div class="sec-label">Los favoritos de la comunidad</div>
+  <div class="sec-title">El ranking de los antojos</div>
+  <div class="top-grid" id="top"></div>
+</section>
+
+<section class="duelo-sec">
+  <div class="sec-label">Dulce decisión</div>
+  <div class="sec-title">¿Cuál antojo prefieres?</div>
+  <div class="duelo-arena" id="duelo"></div>
+  <p class="duelo-info">Elige tu favorito y ayúdalo a subir en el ranking.</p>
+</section>
+
+<section class="horarios-sec">
+  <div class="sec-label">Ven a conocernos</div>
+  <div class="sec-title">Horarios de Craft Pastry</div>
+  <ul class="horarios-lista"><li>🕒 Lunes a viernes: 8:00 a. m. a 9:00 p. m.</li></ul>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-marca"><h3>Craft Pastry</h3><p>Craft Pastry · Panes, hojaldres y antojos dulces en Engativá, Bogotá.</p></div>
+    <div class="footer-col"><h4>Contacto</h4><ul><li><a href="https://wa.me/573161231233" target="_blank" rel="noopener">WhatsApp: +57 3161231233</a></li><li><a href="https://instagram.com/[POR COMPLETAR]" target="_blank" rel="noopener">Instagram: @[POR COMPLETAR]</a></li><li>Facebook: [POR COMPLETAR]</li><li>📍 Bogotá</li></ul></div>
+    <div class="footer-col"><h4>Pagos</h4><ul><li></li><li></li><li></li></ul></div>
+    <div class="footer-col"><h4>Categorías</h4><ul><li>Antojos dulces</li><li>Panes</li><li>Hojaldres</li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Craft Pastry — Todos los derechos reservados</span>
+    <span>Un antojo para cada momento.</span>
+  </div>
+  <div class="footer-credito">
+    Creada con <strong>Harvys</strong> · Prof. Harvey Sanabria ·
+    <a href="https://wa.me/573103323843?text=Hola%20Profesor%20Harvey%2C%20vi%20una%20tienda%20creada%20con%20Harvys%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener">WhatsApp 310 332 3843</a>
+  </div>
+</footer>
+
+<!-- Copia del proyecto para volver a abrirlo en Harvys (botón "Abrir"). No la borres. -->
+<script type="application/json" id="harvys-proyecto">{"negocio":{"nombre":"Craft Pastry","descripcion":"Panes, hojaldres y antojos dulces.","eslogan":"Un antojo para cada momento.","ciudad":"Bogotá","cobertura":"Domicilios en toda Bogotá.","whatsapp":"573161231233","instagram":"[POR COMPLETAR]","facebook":"[POR COMPLETAR]","tiktok":"","horarios":["Lunes a viernes: 8:00 a. m. a 9:00 p. m."],"logo":"","direccion":"Cl. 72 #96A-2, Engativá, Bogotá, Colombia"},"tema":{"nombreEstilo":"Panadería cálida","modo":"claro","colores":{"primario":"#98452F","textoSobrePrimario":"#FFFFFF","fondo":"#FFF9F0","fondoAlterno":"#F4E8D7","tarjeta":"#FFFFFF","texto":"#34251F","textoSuave":"#705B4D","acento":"#A66A24"},"fuentes":{"titulos":"Fraunces","cuerpo":"Lato"},"titulosMayusculas":false,"radio":18,"animaciones":"media","fondoEfecto":"ninguno","hero":"dividido","tarjetas":"elevadas"},"textos":{"heroEtiqueta":"Panes · Hojaldres · Antojos dulces","heroTitulo":"Craft Pastry","heroTituloResaltado":"","heroSubtitulo":"Panes, hojaldres y pequeños antojos para disfrutar tu momento.","heroBoton":"Descubre nuestros antojos","heroImagen":"foto:zwl7v3","estadisticas":[{"valor":"{productos}","etiqueta":"Antojos para elegir"},{"valor":"Bogotá","etiqueta":"Engativá"},{"valor":"Dulce y salado","etiqueta":"Para tu antojo"}],"bannerEtiqueta":"Date un gusto","bannerTitulo":"Tu próximo","bannerTituloResaltado":"antojo favorito","bannerTexto":"Explora nuestros panes, hojaldres y antojos dulces. Encuéntranos en Cl. 72 #96A-2, Engativá, Bogotá.","chips":["Panes","Hojaldres","Antojos dulces","Engativá, Bogotá"],"catalogoEtiqueta":"Nuestra selección","catalogoTitulo":"¿Qué se te antoja hoy?","botonAgregar":"+ Agregar al carrito","beneficiosEtiqueta":"Conoce Craft Pastry","beneficiosTitulo":"Un lugar para tus antojos","recomendadosEtiqueta":"Ideas para darte un gusto","recomendadosTitulo":"Antojos para descubrir","topEtiqueta":"Los favoritos de la comunidad","topTitulo":"El ranking de los antojos","dueloEtiqueta":"Dulce decisión","dueloTitulo":"¿Cuál antojo prefieres?","dueloInfo":"Elige tu favorito y ayúdalo a subir en el ranking.","testimoniosEtiqueta":"Nuestra comunidad","testimoniosTitulo":"Momentos con Craft Pastry","horariosEtiqueta":"Ven a conocernos","horariosTitulo":"Horarios de Craft Pastry","footerTexto":"Craft Pastry · Panes, hojaldres y antojos dulces en Engativá, Bogotá.","footerFrase":"Un antojo para cada momento.","carritoTitulo":"Tus antojos","botonPagar":"Pedir por WhatsApp"},"productos":[{"id":"cp-galleta","nombre":"Galleta","precio":3000,"categoria":"Antojos dulces","imagen":"foto:636f10","descripcion":"Precio por unidad.","opciones":null,"destacado":true},{"id":"cp-pan-integral","nombre":"Pan integral","precio":15000,"categoria":"Panes","imagen":"foto:haga92","descripcion":"Precio por unidad.","opciones":null,"destacado":true},{"id":"cp-alfajor","nombre":"Alfajor","precio":3500,"categoria":"Antojos dulces","imagen":"foto:34yzea","descripcion":"Precio por unidad.","opciones":null,"destacado":false},{"id":"cp-palito-queso","nombre":"Palito de queso","precio":3000,"categoria":"Hojaldres","imagen":"foto:ndgvv3","descripcion":"Precio por unidad.","opciones":null,"destacado":false},{"id":"cp-croissant","nombre":"Croissant","precio":4000,"categoria":"Hojaldres","imagen":"foto:zwl7v3","descripcion":"Precio por unidad.","opciones":null,"destacado":true},{"id":"cp-brownie","nombre":"Brownie","precio":3000,"categoria":"Antojos dulces","imagen":"foto:115pt3","descripcion":"Precio por unidad.","opciones":null,"destacado":false}],"beneficios":[{"icono":"🥖","titulo":"Panes para elegir","texto":"Descubre el pan integral de nuestro catálogo."},{"icono":"🥐","titulo":"Antojos dulces y salados","texto":"Elige entre galleta, alfajor, brownie, croissant y palito de queso."},{"icono":"📍","titulo":"En Engativá","texto":"Encuéntranos en Cl. 72 #96A-2, Bogotá."}],"testimonios":[],"pagos":{"metodos":["Efectivo","Nequi","Daviplata"],"numeroTransferencia":"[POR COMPLETAR]","titular":"[POR COMPLETAR]","contraentregaDetalle":"[POR COMPLETAR]"},"backend":{"url":""},"asistente":{"activo":true,"nombre":"Miga","saludo":"¡Hola! Soy Miga, tu asistente de Craft Pastry. ¿Qué se te antoja hoy?"},"secciones":["banner","catalogo","beneficios","recomendados","top","duelo","horarios"],"personalizado":{"css":"","secciones":[]}}</script>
+<script type="application/json" id="harvys-rutas">{"cp-galleta":"img/galleta-636f10.jpg","cp-pan-integral":"img/pan-integral-haga92.jpg","cp-alfajor":"img/alfajor-34yzea.jpg","cp-palito-queso":"img/palito-de-queso-ndgvv3.jpg","cp-croissant":"img/croissant-zwl7v3.jpg","cp-brownie":"img/brownie-115pt3.jpg"}</script>
+<script src="script.js"></script>
+</body>
+</html>
